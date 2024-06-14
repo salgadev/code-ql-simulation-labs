@@ -1,3 +1,3 @@
 # Code QL Excercises and Simulation labs 
 
-Navigate the code using the different branches
+Placeholders for CodeQL GitHub Action workflows with extended scan set.
