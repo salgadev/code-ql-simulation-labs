@@ -22,12 +22,16 @@ int main(int argc, char** argv) {
     char cmd[BUFSIZE] = "wc -c < ";    
 
     // unsigned integer for objects size    
-    size_t buffer_left = BUFSIZE - strlen(cmd);
+    size_t buffer_left = BUFSIZE - strlen(cmd) - 1;
     
     // Append user input to the command string
     strncat(cmd, argv[1], buffer_left);
+    cmd[BUFSIZE - 1] = '\0';  // must end in null character
+
+    // copy to separate buffer
     char command[BUFSIZE];
-    strncpy(command, cmd, BUFSIZE);
+    strncpy(command, cmd, BUFSIZE - 1);
+    command[BUFSIZE -1] = '\0';
 
     system(command);
 }
