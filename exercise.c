@@ -27,7 +27,7 @@ int main(int argc, char** argv) {
     // Append user input to the command string
     strncat(cmd, argv[1], buffer_left);
     char command[BUFSIZE];
-    strlcpy(command, cmd, BUFSIZE);
+    strncpy(command, cmd, BUFSIZE);
 
     system(command);
 }
