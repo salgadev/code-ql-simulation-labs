@@ -2,9 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <fcntl.h>
 
 #define BUFSIZE 256
-#define ALLOWED_CHARS "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/_-.< >|"
+#define ALLOWED_CHARS "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/_-. <>"
 
 void sanitize_path(char *path) {
     char *p = path;
@@ -26,15 +27,12 @@ int main(int argc, char** argv) {
     strncpy(sanitized_path, argv[1], BUFSIZE - 1);
     sanitized_path[BUFSIZE - 1] = '\0';
 
-    char cmd[BUFSIZE] = "wc -c < ";
-    size_t buffer_left = BUFSIZE - strlen(cmd) - 1;
+    struct stat st;
+    if (stat(sanitized_path, &st) < 0) {
+        perror("stat");
+        return -1;
+    }
 
-    strncat(cmd, sanitized_path, buffer_left);
-    cmd[BUFSIZE - 1] = '\0';  // must end in null character
-
-    // sanitize the final command
-    sanitize_path(cmd);
-
-    system(cmd);
+    printf("%ld\n", (long)st.st_size);
     return 0;
 }
