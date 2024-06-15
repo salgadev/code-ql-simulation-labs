@@ -19,10 +19,15 @@ int main(int argc, char** argv) {
         perror("Failed to obtain information about the entry.");
         return EXIT_FAILURE;
     }
+    char cmd[BUFSIZE] = "wc -c < ";    
 
-    char cmd[BUFSIZE] = "wc -c < ";
-    strcat(cmd, argv[1]);
-    char parsed_cmd[BUFSIZE];
-    strcpy(parsed_cmd, cmd);
-    system(parsed_cmd);
+    // unsigned integer for objects size    
+    size_t buffer_left = BUFSIZE - strlen(cmd);
+    
+    // Append user input to the command string
+    snprintf(cmd + strlen(cmd), buffer_left, "%s", argv[1]);
+    char command[BUFSIZE];
+    strcpy(command, cmd);
+
+    system(command);
 }
