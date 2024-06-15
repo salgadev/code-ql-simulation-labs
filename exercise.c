@@ -2,35 +2,42 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
-                                
-#define BUFSIZE 256
 
-// This function escapes characters that pose a security risk as whitespace
-void escape_special_chars(char *path) {
-    while (*path) {
-        if (*path == '&' || *path == '|' || *path == '<' || *path == '>' || *path == '(' || *path == ')' || *path == '{' || *path == '}' || *path == ':') {
-            *path = ' ';
+#define BUFSIZE 256
+#define ALLOWED_CHARS "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/_-."
+
+// Whitelist function to sanitize file path
+void sanitize_path(char *path) {
+    char *p = path;
+    while (*p) {
+        if (!strchr(ALLOWED_CHARS, *p)) {
+            *p = '_'; // replace disallowed characters with underscore
         }
-        path++;
+        p++;
     }
 }
 
 // This program prints the size of a specified file in bytes
 int main(int argc, char** argv) {
     // Ensure that the user supplied exactly one command line argument
-    if (argc != 2) { 
+    if (argc != 2) {
       fprintf(stderr, "Please provide the address of a file as an input.\n");
       return -1;
     }
 
-    escape_special_chars(argv[1]);
-    char cmd[BUFSIZE] = "wc -c < ";    
+    char sanitized_path[BUFSIZE];
+    strncpy(sanitized_path, argv[1], BUFSIZE - 1);
+    sanitized_path[BUFSIZE - 1] = '\0';
 
-    // unsigned integer for objects size    
+    sanitize_path(sanitized_path);
+
+    char cmd[BUFSIZE] = "wc -c < ";
+
+    // unsigned integer for objects size
     size_t buffer_left = BUFSIZE - strlen(cmd) - 1;
-    
-    // Append user input to the command string
-    strncat(cmd, argv[1], buffer_left);
+
+    // Append sanitized user input to the command string
+    strncat(cmd, sanitized_path, buffer_left);
     cmd[BUFSIZE - 1] = '\0';  // must end in null character
 
     // copy to separate buffer
