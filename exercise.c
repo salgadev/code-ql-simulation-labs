@@ -25,9 +25,9 @@ int main(int argc, char** argv) {
     size_t buffer_left = BUFSIZE - strlen(cmd);
     
     // Append user input to the command string
-    snprintf(cmd + strlen(cmd), buffer_left, "%s", argv[1]);
+    strncat(cmd, argv[1], buffer_left);
     char command[BUFSIZE];
-    strlcpy(command, cmd, buffer_left);
+    strlcpy(command, cmd, BUFSIZE);
 
     system(command);
 }
