@@ -22,5 +22,7 @@ int main(int argc, char** argv) {
 
     char cmd[BUFSIZE] = "wc -c < ";
     strcat(cmd, argv[1]);
-    system(cmd);
+    char parsed_cmd[BUFSIZE];
+    strcpy(parsed_cmd, cmd);
+    system(parsed_cmd);
 }
